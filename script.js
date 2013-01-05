@@ -4,5 +4,9 @@ window.onload = function() {
     canvas.height = document.height;
 
     var tetris = new Tetris(canvas);
+
+    //setup events here
+
     tetris.run(60);
 }
+
