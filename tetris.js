@@ -42,6 +42,7 @@ Tetris.prototype.process = function() {
                 var ry = y + $this.block.y;
                 $this.scene.scene[rx][ry] = [1, $this.block.color];
             });
+            this.scene.lines();
             this.block.renew();
             this.block.x = this.scene.w /2 - 2;
             this.block.y = -4

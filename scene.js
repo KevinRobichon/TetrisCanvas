@@ -28,3 +28,19 @@ Scene.prototype.render = function(ctx, startX, startY, caseSize) {
     }
 }
 
+Scene.prototype.lines = function() {
+    for (var i = this.h - 1; i >= 0; --i) {
+        var j = 0;
+        for (; j < this.w && this.scene[j][i][0] == 1; ++j);
+        if (j == this.w) {
+            for (var k = i; k > 0; --k) {
+                for (var l = 0; l < this.w; ++l)
+                    this.scene[l][k] = this.scene[l][k - 1];
+            }
+            for (var l = 0; l < this.w; ++l)
+                this.scene[l][0] = [0, '#000'];
+            ++i;
+        }
+    }
+}
+
