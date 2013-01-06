@@ -14,7 +14,18 @@ var Tetris = function(canvasElement) {
     this.block = new Block();
 
     this.caseSize = 20;
+    this.fallTime = 1000;
     this.borderColor = randomHexColor();
+}
+
+Tetris.prototype.process = function() {
+    var now = Date.now();
+    var diff = now - this.referenceTime;
+    while (diff >= this.fallTime) {
+        this.block.y++;
+        diff -= this.fallTime;
+    }
+    this.referenceTime = now - diff;
 }
 
 Tetris.prototype.render = function() {
@@ -41,11 +52,13 @@ Tetris.prototype.render = function() {
 }
 
 Tetris.prototype.iteration = function() {
+    this.process();
     this.render();
 }
 
 Tetris.prototype.run = function(fps) {
     var $this = this;
+    this.referenceTime = Date.now();
 
     setInterval(function() {
         $this.iteration();

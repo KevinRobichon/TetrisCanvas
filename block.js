@@ -34,7 +34,7 @@ Block.prototype.renew = function() {
         for (var j = 0; j < 4; ++j) {
             frame.push(new Array());
             for (var k = 0; k < 4; ++k) {
-                frame.slice(-1)[0].push(parseInt(cur[i][k * 4 + j]));
+                frame.slice(-1)[0].push(cur[i][k * 4 + j]);
             }
         }
         this.currentBlock.push(frame);
@@ -49,15 +49,21 @@ Block.prototype.next = function() {
     this.currentFrame %= this.currentBlock.length;
 }
 
+Block.prototype.iterate = function(callback) {
+    for (var i = 0; i < 4; ++i) {
+        for (var j = 0; j < 4; ++j) {
+            if (this.currentBlock[this.currentFrame][i][j] == '1')
+                callback(i, j);
+        }
+    }
+}
+
 Block.prototype.render = function(ctx, startX, startY, caseSize) {
     startX += this.x * caseSize;
     startY += this.y * caseSize;
     ctx.fillStyle = this.color;
-    for (var i = 0; i < 4; ++i) {
-        for (var j = 0; j < 4; ++j) {
-            if (this.currentBlock[this.currentFrame][i][j] == 1)
-                ctx.fillRect(startX + i * caseSize, startY + j * caseSize, caseSize, caseSize);
-        }
-    }
+    this.iterate(function(x, y) {
+        ctx.fillRect(startX + x * caseSize, startY + y * caseSize, caseSize, caseSize);
+    });
 }
 
