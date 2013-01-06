@@ -13,6 +13,20 @@ window.onload = function() {
     var tetris = new Tetris(canvas);
 
     //setup events here
+    document.onkeydown = function(e) {
+        switch(e.keyIdentifier) {
+        case 'Left':
+            e.preventDefault();
+            tetris.goLeft();
+            break;
+        case 'Right':
+            e.preventDefault();
+            tetris.goRight();
+            break;
+        default:
+            //NOP
+        }
+    }
 
     tetris.run(60);
 }

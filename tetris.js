@@ -74,6 +74,30 @@ Tetris.prototype.render = function() {
     this.block.render(this.ctx, startX, startY, this.caseSize);
 }
 
+Tetris.prototype.goLeft = function() {
+    this.go(-1);
+}
+
+Tetris.prototype.goRight = function() {
+    this.go(1);
+}
+
+Tetris.prototype.go = function(direction) {
+    var canTranslate = true;
+    var $this = this;
+    this.block.iterate(function(x, y) {
+        var rx = x + $this.block.x;
+        var ry = y + $this.block.y;
+        var nrx = rx + direction;
+        if (nrx < 0 || nrx >= $this.scene.w)
+            canTranslate = false;
+        else if ($this.scene.scene[nrx][ry][0] == 1)
+            canTranslate = false;
+    });
+    if (canTranslate)
+        this.block.x += direction;
+}
+
 Tetris.prototype.iteration = function() {
     this.process();
     this.render();
