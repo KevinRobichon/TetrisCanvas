@@ -11,9 +11,7 @@ var Tetris = function(canvasElement) {
     this.canvas = canvasElement;
     this.ctx = this.canvas.getContext('2d');
     this.scene = new Scene(10, 20);
-    this.block = new Block();
-    this.block.x = this.scene.w /2 - 2;
-    this.block.y = -4
+    this.block = new Block(this.scene.w /2 - 2);
 
     this.caseSize = 20;
     this.fallTime = 300;
@@ -23,30 +21,9 @@ var Tetris = function(canvasElement) {
 Tetris.prototype.process = function() {
     var now = Date.now();
     var diff = now - this.referenceTime;
-    var $this = this;
 
     while (diff >= this.fallTime) {
-        var canFall = true;
-        this.block.iterate(function(x, y) {
-            var rx = x + $this.block.x;
-            var ry = y + $this.block.y;
-            if ((ry + 1) >= $this.scene.h ||
-                (ry >= 0 && $this.scene.scene[rx][ry + 1][0] == 1))
-                canFall = false;
-        });
-        if (canFall)
-            this.block.y++;
-        else {
-            this.block.iterate(function(x, y) {
-                var rx = x + $this.block.x;
-                var ry = y + $this.block.y;
-                $this.scene.scene[rx][ry] = [1, $this.block.color];
-            });
-            this.scene.lines();
-            this.block.renew();
-            this.block.x = this.scene.w /2 - 2;
-            this.block.y = -4
-        }
+        this.fall();
         diff -= this.fallTime;
     }
     this.referenceTime = now - diff;
@@ -75,14 +52,6 @@ Tetris.prototype.render = function() {
     this.block.render(this.ctx, startX, startY, this.caseSize);
 }
 
-Tetris.prototype.goLeft = function() {
-    this.go(-1);
-}
-
-Tetris.prototype.goRight = function() {
-    this.go(1);
-}
-
 Tetris.prototype.canTranslate = function(direction) {
     var canTranslate = true;
     var $this = this;
@@ -98,13 +67,49 @@ Tetris.prototype.canTranslate = function(direction) {
     return canTranslate;
 }
 
+Tetris.prototype.canFall = function() {
+    var canFall = true;
+    var $this = this;
+    this.block.iterate(function(x, y) {
+        var rx = x + $this.block.x;
+        var ry = y + $this.block.y;
+        if ((ry + 1) >= $this.scene.h ||
+            (ry >= 0 && $this.scene.scene[rx][ry + 1][0] == 1))
+            canFall = false;
+    });
+    return canFall;
+}
+
+Tetris.prototype.isStuck = function() {
+    return !this.canTranslate(0);
+}
+
+Tetris.prototype.goLeft = function() {
+    this.go(-1);
+}
+
+Tetris.prototype.goRight = function() {
+    this.go(1);
+}
+
 Tetris.prototype.go = function(direction) {
     if (this.canTranslate(direction))
         this.block.x += direction;
 }
 
-Tetris.prototype.isStuck = function() {
-    return !this.canTranslate(0);
+Tetris.prototype.fall = function() {
+    var $this = this;
+    if (this.canFall())
+        this.block.y++;
+    else {
+        this.block.iterate(function(x, y) {
+            var rx = x + $this.block.x;
+            var ry = y + $this.block.y;
+            $this.scene.scene[rx][ry] = [1, $this.block.color];
+        });
+        this.scene.lines();
+        this.block.renew();
+    }
 }
 
 Tetris.prototype.rotate = function() {
@@ -126,5 +131,10 @@ Tetris.prototype.run = function(fps) {
     setInterval(function() {
         $this.iteration();
     }, 1000 / fps);
+}
+
+Tetris.prototype.reset = function() {
+    this.scene.reset();
+    this.block.renew();
 }
 

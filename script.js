@@ -27,6 +27,14 @@ window.onload = function() {
             e.preventDefault();
             tetris.rotate();
             break;
+        case 'Down':
+            e.preventDefault();
+            tetris.fall();
+            break;
+        case 'U+0020':
+            e.preventDefault();
+            tetris.reset();
+            break;
         default:
             //NOP
         }

@@ -1,4 +1,5 @@
-var Block = function() {
+var Block = function(startX) {
+    this.sx = startX;
     this.blocks = [
         [
             '0000' +
@@ -39,8 +40,8 @@ Block.prototype.renew = function() {
         }
         this.currentBlock.push(frame);
     }
-    this.x = 0;
-    this.y = 0;
+    this.x = this.sx;
+    this.y = -4;
     this.color = randomHexColor();
 }
 
