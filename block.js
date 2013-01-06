@@ -59,11 +59,13 @@ Block.prototype.iterate = function(callback) {
 }
 
 Block.prototype.render = function(ctx, startX, startY, caseSize) {
+    var absStartY = startY;
     startX += this.x * caseSize;
     startY += this.y * caseSize;
     ctx.fillStyle = this.color;
     this.iterate(function(x, y) {
-        ctx.fillRect(startX + x * caseSize, startY + y * caseSize, caseSize, caseSize);
+        if ((startY + y * caseSize) >= absStartY)
+            ctx.fillRect(startX + x * caseSize, startY + y * caseSize, caseSize, caseSize);
     });
 }
 

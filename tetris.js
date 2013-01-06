@@ -12,17 +12,40 @@ var Tetris = function(canvasElement) {
     this.ctx = this.canvas.getContext('2d');
     this.scene = new Scene(10, 20);
     this.block = new Block();
+    this.block.x = this.scene.w /2 - 2;
+    this.block.y = -4
 
     this.caseSize = 20;
-    this.fallTime = 1000;
+    this.fallTime = 100;
     this.borderColor = randomHexColor();
 }
 
 Tetris.prototype.process = function() {
     var now = Date.now();
     var diff = now - this.referenceTime;
+    var $this = this;
+
     while (diff >= this.fallTime) {
-        this.block.y++;
+        var canFall = true;
+        this.block.iterate(function(x, y) {
+            var rx = x + $this.block.x;
+            var ry = y + $this.block.y;
+            if ((ry + 1) >= $this.scene.h ||
+                (ry >= 0 && $this.scene.scene[rx][ry + 1][0] == 1))
+                canFall = false;
+        });
+        if (canFall)
+            this.block.y++;
+        else {
+            this.block.iterate(function(x, y) {
+                var rx = x + $this.block.x;
+                var ry = y + $this.block.y;
+                $this.scene.scene[rx][ry] = [1, $this.block.color];
+            });
+            this.block.renew();
+            this.block.x = this.scene.w /2 - 2;
+            this.block.y = -4
+        }
         diff -= this.fallTime;
     }
     this.referenceTime = now - diff;
