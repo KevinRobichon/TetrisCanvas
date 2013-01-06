@@ -11,6 +11,7 @@ var Tetris = function(canvasElement) {
     this.canvas = canvasElement;
     this.ctx = this.canvas.getContext('2d');
     this.scene = new Scene(10, 20);
+    this.block = new Block();
 
     this.caseSize = 20;
     this.borderColor = randomHexColor();
@@ -36,9 +37,10 @@ Tetris.prototype.render = function() {
     this.ctx.fillRect(startX, startY, totalWidth, totalHeight);
 
     this.scene.render(this.ctx, startX, startY, this.caseSize);
+    this.block.render(this.ctx, startX, startY, this.caseSize);
 }
 
-Tetris.prototype.frame = function() {
+Tetris.prototype.iteration = function() {
     this.render();
 }
 
@@ -46,7 +48,7 @@ Tetris.prototype.run = function(fps) {
     var $this = this;
 
     setInterval(function() {
-        $this.frame();
+        $this.iteration();
     }, 1000 / fps);
 }
 

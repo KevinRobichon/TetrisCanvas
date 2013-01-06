@@ -22,7 +22,6 @@ Scene.prototype.reset = function() {
 Scene.prototype.render = function(ctx, startX, startY, caseSize) {
     for (var i = 0; i < this.w; ++i) {
         for (var j = 0; j < this.h; ++j) {
-            this.scene[i][j] = [0, '#000'];
             ctx.fillStyle = this.scene[i][j][1];
             ctx.fillRect(startX + i * caseSize, startY + j * caseSize, caseSize, caseSize);
         }
