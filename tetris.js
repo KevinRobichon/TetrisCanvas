@@ -16,7 +16,7 @@ var Tetris = function(canvasElement) {
     this.block.y = -4
 
     this.caseSize = 20;
-    this.fallTime = 100;
+    this.fallTime = 300;
     this.borderColor = randomHexColor();
 }
 
@@ -82,7 +82,7 @@ Tetris.prototype.goRight = function() {
     this.go(1);
 }
 
-Tetris.prototype.go = function(direction) {
+Tetris.prototype.canTranslate = function(direction) {
     var canTranslate = true;
     var $this = this;
     this.block.iterate(function(x, y) {
@@ -91,11 +91,26 @@ Tetris.prototype.go = function(direction) {
         var nrx = rx + direction;
         if (nrx < 0 || nrx >= $this.scene.w)
             canTranslate = false;
-        else if ($this.scene.scene[nrx][ry][0] == 1)
+        else if (ry >= 0 && $this.scene.scene[nrx][ry][0] == 1)
             canTranslate = false;
     });
-    if (canTranslate)
+    return canTranslate;
+}
+
+Tetris.prototype.go = function(direction) {
+    if (this.canTranslate(direction))
         this.block.x += direction;
+}
+
+Tetris.prototype.isStuck = function() {
+    return !this.canTranslate(0);
+}
+
+Tetris.prototype.rotate = function() {
+    this.block.next();
+    if (this.isStuck()) {
+        this.block.prev();
+    }
 }
 
 Tetris.prototype.iteration = function() {

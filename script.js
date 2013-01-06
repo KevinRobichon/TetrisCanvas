@@ -23,6 +23,10 @@ window.onload = function() {
             e.preventDefault();
             tetris.goRight();
             break;
+        case 'Up':
+            e.preventDefault();
+            tetris.rotate();
+            break;
         default:
             //NOP
         }

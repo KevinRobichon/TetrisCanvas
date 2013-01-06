@@ -49,6 +49,12 @@ Block.prototype.next = function() {
     this.currentFrame %= this.currentBlock.length;
 }
 
+Block.prototype.prev = function() {
+    --this.currentFrame;
+    this.currentFrame += this.currentBlock.length;
+    this.currentFrame %= this.currentBlock.length;
+}
+
 Block.prototype.iterate = function(callback) {
     for (var i = 0; i < 4; ++i) {
         for (var j = 0; j < 4; ++j) {
