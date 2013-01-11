@@ -7,8 +7,8 @@ function randomHexColor() {
 window.onload = function() {
     var canvas = document.getElementById('canvas');
 
-    canvas.width = document.width;
-    canvas.height = document.height;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
     var tetris = new Tetris(canvas);
 
